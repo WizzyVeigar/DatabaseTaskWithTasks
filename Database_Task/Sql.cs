@@ -27,14 +27,11 @@ namespace Database_Task
             dt = new DataTable();
         }
 
-    
+
 
         public DataTable GetDb()
         {
             sqlCommand = new SqlCommand("Select * From SteamMarket_Name", conn);
-            
-           
-
             conn.Open();
             da.SelectCommand = sqlCommand;
             dataReader = sqlCommand.ExecuteReader();
@@ -51,9 +48,10 @@ namespace Database_Task
             {
                 string[] steamString = null;
                 string json = wc.DownloadString(@"https://steamcommunity.com/market/priceoverview/?currency=1&appid=570&market_hash_name=" + nameOfItem);
-                //Euro string
+
+                //Euro string, only difference is ?currency=__
                 //string json = wc.DownloadString(@"https://steamcommunity.com/market/priceoverview/?currency=3&appid=570&market_hash_name=" + nameOfItem);
-                //json.Replace(" ", "%20");
+
                 JObject js = JObject.Parse(json);
                 if (json.Contains("median_price"))
                 {
@@ -74,7 +72,7 @@ namespace Database_Task
 
         internal void Hell(string itemName, string path)
         {
-            string query = "Insert into SteamMarket_Name values('[@itemName]', (SELECT * FROM OPENROWSET(BULK N'"+path+"', SINGLE_BLOB) as Blob))";
+            string query = "Insert into SteamMarket_Name values('[@itemName]', (SELECT * FROM OPENROWSET(BULK N'" + path + "', SINGLE_BLOB) as Blob))";
             string nonQuery = "insert into SteamMarket_Name ([ItemName], [ImageName])" + " VALUES (@ItemName , (SELECT * FROM OPENROWSET(BULK N'" + path + "', SINGLE_BLOB) as Blob))";
             // 1. declare command object with parameter
             sqlCommand = new SqlCommand(nonQuery, conn);
@@ -82,11 +80,11 @@ namespace Database_Task
 
 
             // 3. add new parameter to command object
-            sqlCommand.Parameters.AddWithValue("@ItemName",itemName);
-          //  sqlCommand.Parameters.AddWithValue("@ImageName",path);
-          //  sqlCommand.Parameters.AddWithValue("@ImageName", path);
+            sqlCommand.Parameters.AddWithValue("@ItemName", itemName);
+            //  sqlCommand.Parameters.AddWithValue("@ImageName",path);
+            //  sqlCommand.Parameters.AddWithValue("@ImageName", path);
 
-            
+
             //sqlCommand = new SqlCommand("INSERT INTO SteamMarket_Name values('" + itemName + "', (SELECT * FROM OPENROWSET(BULK N'" + path + "', SINGLE_BLOB) as Blob))", conn);
             conn.Open();
             sqlCommand.ExecuteNonQuery();
@@ -114,8 +112,6 @@ namespace Database_Task
             {
                 return false;
             }
-
         }
-
     }
 }

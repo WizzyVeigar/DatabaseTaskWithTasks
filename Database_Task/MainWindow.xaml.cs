@@ -26,12 +26,14 @@ namespace Database_Task
     {
         Logic logic = new Logic();
         string path = null;
+        Stopwatch stopwatch = new Stopwatch();
+
         public MainWindow()
         {
             InitializeComponent();
             logic.UpdateDataRow();
             GetDbNames();
-            ShowPicture();
+            ShowPictureAsync();
         }
 
         private void GetDbNames()
@@ -44,35 +46,50 @@ namespace Database_Task
             //dropDownBox.SelectedItem = dropDownBox.Items[0];
         }
 
-        private ImageSource ShowPicture()
+        private async Task<ImageSource> ShowPictureAsync()
         {
             ImageSource returnPic = null;
             if ((string)dropDownBox.SelectedValue != logic.IndexByName)
             {
                 logic.IndexByName = dropDownBox.SelectedValue.ToString();
-                 returnPic = logic.UpdatePicture((string)dropDownBox.SelectedValue);
-                
-            }return returnPic;
+                returnPic = logic.UpdatePicture((string)dropDownBox.SelectedValue);
+
+            }
+            return returnPic;
         }
 
-        private void DropDownBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void DropDownBox_SelectionChangedAsync(object sender, SelectionChangedEventArgs e)
         {
+            stopwatch.Start();
+            Debug.WriteLine("When starting: " + stopwatch.Elapsed);
             string volume;
             string price;
+            var getPictureTask = ShowPictureAsync();
+            var getSteamInfoTask = logic.GetSteamInfoAsync(dropDownBox.SelectedValue.ToString());
+            ImageSource pic = await getPictureTask;
+            string[] priceAndVol = await getSteamInfoTask;
+
             Debug.WriteLine(dropDownBox.SelectedValue.ToString());
+            //var getSteamInfoTask = logic.GetSteamInfo(dropDownBox.SelectedValue.ToString(), out volume, out price); //DO THIS LATER
+            //logic.GetSteamInfo(dropDownBox.SelectedValue.ToString(), out volume, out price);
+            if (getPictureTask.IsCompleted && getSteamInfoTask.IsCompleted)
+            {
 
-            logic.GetSteamInfo(dropDownBox.SelectedValue.ToString(), out volume, out price);
-
-            //everything that is visible
-            apiTextBox_Name.Content = dropDownBox.SelectedValue.ToString();
-            apiTextBox_Amount.Content = volume;
-            apiTextBox_AvgPrice.Content = price; 
-            ShowPicture();
+                Debug.WriteLine("Both tasks done");
+                volume = priceAndVol[0];
+                price = priceAndVol[1];
+                //everything that is visible
+                apiTextBox_Name.Content = dropDownBox.SelectedValue.ToString();
+                apiTextBox_Amount.Content = volume;
+                apiTextBox_AvgPrice.Content = price;
+                imageBox.Source = pic;
+                stopwatch.Stop();
+                Debug.WriteLine("When Done: " + stopwatch.Elapsed);
+            }
         }
 
         private void SearchForPicture(object sender, RoutedEventArgs e)
         {
-
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image files(*.png;)|*.png;";
             if (openFileDialog.ShowDialog() == true)
@@ -93,7 +110,6 @@ namespace Database_Task
                 }
                 else
                     submitNameBox.Text = "Something went wrong, try again!";
-
             }
         }
     }

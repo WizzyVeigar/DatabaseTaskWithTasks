@@ -26,7 +26,7 @@ namespace Database_Task
 
         public void UpdateDataRow()
         {
-            if(logicDT != null)
+            if (logicDT != null)
                 logicDT.Clear();
             if (nameList.Count != 0)
                 nameList.Clear();
@@ -36,7 +36,7 @@ namespace Database_Task
         public List<string> FillDropDown()
         {
             //UpdateDataRow();
-            
+
             foreach (DataRow row in logicDT.Rows)
             {
                 nameList.Add(row[1].ToString());
@@ -77,7 +77,15 @@ namespace Database_Task
             volumeOut = temp[0];
             priceOut = temp[1];
         }
-        
+
+        public Task<string[]> GetSteamInfoAsync(string nameOfItem)
+        {
+            return Task.Run(() =>
+            {
+                return sql.GetVolumeAndAvg(nameOfItem);
+            });
+        }
+
         public bool DoesItemExist(string itemName)
         {
             return sql.DoesItemExist(itemName);

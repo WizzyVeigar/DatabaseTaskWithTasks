@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <ComboBox Name="dropDownBox" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,100" Width="120" IsReadOnly="False" SelectionChanged="DropDownBox_SelectionChanged"/>
+        <ComboBox Name="dropDownBox" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,100" Width="120" IsReadOnly="False" SelectionChanged="DropDownBox_SelectionChangedAsync"/>
         <Image Width="250" Height="250" Name="imageBox" Margin="501,65,41,104"/>
         <Label Name="apiTextBox_Name" BorderBrush="Black" BorderThickness="1" Width="250" Height="35" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,20,0,0" Content="Name"/>
         <Label Name="apiTextBox_Amount" BorderBrush="Black" BorderThickness="1" Width="250" Height="35" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" Content="Amount"/>
