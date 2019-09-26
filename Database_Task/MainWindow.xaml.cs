@@ -24,6 +24,8 @@ namespace Database_Task
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        Stopwatch stopwatch = new Stopwatch();
         Logic logic = new Logic();
         string path = null;
         public MainWindow()
@@ -57,6 +59,8 @@ namespace Database_Task
 
         private void DropDownBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            stopwatch.Start();
+            Debug.WriteLine("start doing stuff:" + stopwatch.Elapsed);
             string volume;
             string price;
             Debug.WriteLine(dropDownBox.SelectedValue.ToString());
@@ -67,7 +71,10 @@ namespace Database_Task
             apiTextBox_Name.Content = dropDownBox.SelectedValue.ToString();
             apiTextBox_Amount.Content = volume;
             apiTextBox_AvgPrice.Content = price;
+            imageBox.Source = logic.UpdatePicture(dropDownBox.SelectedValue.ToString());
             ShowPicture();
+            stopwatch.Stop();
+            Debug.WriteLine("Done doing stuff:" + stopwatch.Elapsed);
         }
 
         private void SearchForPicture(object sender, RoutedEventArgs e)
