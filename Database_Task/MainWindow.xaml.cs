@@ -66,7 +66,7 @@ namespace Database_Task
             //everything that is visible
             apiTextBox_Name.Content = dropDownBox.SelectedValue.ToString();
             apiTextBox_Amount.Content = volume;
-            apiTextBox_AvgPrice.Content = price;
+            apiTextBox_AvgPrice.Content = price; 
             ShowPicture();
         }
 
