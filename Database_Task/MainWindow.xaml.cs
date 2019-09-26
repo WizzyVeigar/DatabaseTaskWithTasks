@@ -94,7 +94,7 @@ namespace Database_Task
             openFileDialog.Filter = "Image files(*.png;)|*.png;";
             if (openFileDialog.ShowDialog() == true)
                 path = openFileDialog.FileName;
-            Debug.WriteLine(path);
+            Debug.WriteLine(path); 
         }
 
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
